@@ -1,6 +1,7 @@
 # Imagix
 Variety of freelance photographs that can be seen and reviewed by public
 
+
 ## Installation
 
 Download the entire project and run app.js file by hosting it on a server to access the requisite webpage
