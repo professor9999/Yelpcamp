@@ -3,17 +3,18 @@ Variety of freelance photographs that can be seen and reviewed by public
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Download the entire project and run app.js file by hosting it on a server to access the requisite webpage
 
-```bash
-pip install foobar
+## Framworks
+
+```
+FrontEnd - Semantic UI, Bootstrap, Font Awesome
+BackEnd - Express JS (Node JS was used as runtime environment along with a variety of libraries)
 ```
 
 ## Usage
 
-```python
-import foobar
-
+```
 foobar.pluralize('word') # returns 'words'
 foobar.pluralize('goose') # returns 'geese'
 foobar.singularize('phenomena') # returns 'phenomenon'
