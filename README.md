@@ -1,5 +1,5 @@
 # Imagix
-Variety of freelance photographs that can be seen and reviewed by public
+Variety of campsites that can be visited and reviewed by public
 
 
 ## Installation
