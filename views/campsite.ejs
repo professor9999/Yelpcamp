@@ -107,17 +107,23 @@
                                     <div class="comment">
                                         <p class="comment-main">
                                             <strong><%=comment.author.username%></strong>
-                                            <span>10 days ago</span>
-                                            <br>
-                                            <%=comment.text%>
-                                                <div>
-                                                    <% if(currentUser && comment.author.id==String(currentUser._id)){ %>
-                                                        <a class="comment-edit btn btn-warning btn-xs" href="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/edit"> edit</a>
-                                                        <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id%>/delete" method="POST">
-                                                            <button class="comment-delete btn btn-danger btn-xs">delete</button>
-                                                        </form>
-                                                        <% } %>
-                                                </div>
+                                            <% var x=new Date %>
+                                                <span><% if(x.getHours()>12){ %>
+                                                    <%= x.getHours()-12 %>:<%= x.getMinutes() %> p.m.
+                                                <%} else{ %>
+                                                    <%= x.getHours() %>:<%= x.getMinutes() %> a.m.
+                                                <% } %>
+                                                , <%= x.getDate() %>-<%= x.getMonth() %>-<%= x.getFullYear() %></span>
+                                                <br>
+                                                <%=comment.text%>
+                                                    <div>
+                                                        <% if(currentUser && comment.author.id==String(currentUser._id)){ %>
+                                                            <a class="comment-edit btn btn-warning btn-xs" href="/campgrounds/<%= camp._id %>/comments/<%= comment._id %>/edit"> edit</a>
+                                                            <form action="/campgrounds/<%= camp._id %>/comments/<%= comment._id%>/delete" method="POST">
+                                                                <button class="comment-delete btn btn-danger btn-xs">delete</button>
+                                                            </form>
+                                                            <% } %>
+                                                    </div>
                                         </p>
                                     </div>
                                     <% }) %>
