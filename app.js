@@ -49,6 +49,10 @@ app.get("/home", function(req, res) {
 });
 app.get("/campgrounds", function(req, res) {
     Campground.find({}, function(err, campgrounds) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        }
         res.render("campground", { campgrounds: campgrounds });
     });
 });
@@ -74,7 +78,8 @@ app.get("/campgrounds/:id", function(req, res) {
     var id = req.params.id;
     Campground.findById(id).populate("comments").exec(function(err, campsite) {
         if (err) {
-            res.send("<h2>ERROR 404 - Page not found</h2>");
+            console.log(err);
+            res.status(500).send();
         } else {
             res.render("campsite", { camp: campsite });
         }
@@ -91,8 +96,7 @@ app.get("/campgrounds/:id/edit", function(req, res) {
                 if (req.user._id == String(campsite.author.id)) {
                     res.render("campground-edit", { camp: campsite });
                 } else {
-                    console.log("Unauthorised access");
-                    res.redirect("/campgrounds/" + id);
+                    res.status(401).send();
                 }
 
             }
@@ -112,6 +116,7 @@ app.post("/campgrounds/:id", isLoggedIn, function(req, res) {
     Campground.findByIdAndUpdate(id, object, function(err, updated) {
         if (err) {
             console.log(err);
+            res.status(500).send();
         } else {
             res.redirect("/campgrounds/" + id);
         }
@@ -122,12 +127,14 @@ app.post("/campgrounds/:id/delete", isLoggedIn, function(req, res) {
     var id = req.params.id;
     Campground.findById(id, function(err, campsite) {
         if (err) {
+            console.log(err);
             res.redirect("/campgrounds");
         } else {
             if (req.user._id == String(campsite.author.id)) {
                 Campground.findByIdAndRemove(id, function(err) {
                     if (err) {
                         console.log(err);
+                        res.status(500).send();
                     } else {
                         res.redirect("/campgrounds");
                     }
@@ -150,7 +157,8 @@ app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res) {
     var id = req.params.id;
     Campground.findById(id, function(err, campsite) {
         if (err) {
-            res.send("<h2>ERROR 404 - Page not found</h2>");
+            console.log(err);
+            res.status(500).send();
         } else {
             res.render("comments/new", { camp: campsite });
         }
@@ -160,7 +168,8 @@ app.post("/campgrounds/:id/comments", isLoggedIn, function(req, res) {
     var id = req.params.id;
     Campground.findById(id, function(err, campsite) {
         if (err) {
-            res.send("<h2>ERROR 404 - Page not found</h2>");
+            console.log(err);
+            res.redirect("/campgrounds/" + id);
         } else {
             var author = {
                 id: req.user._id,
@@ -182,10 +191,15 @@ app.get("/campgrounds/:id/comments/:comment_id/edit", isCommentOwner, function(r
         if (req.user)
             Campground.findById(id, function(err, campsite) {
                 if (err) {
-                    res.send("<h2>ERROR 404</h2>");
+                    console.log(err);
+                    res.status(500).send();
                 } else {
                     var comment_id = req.params.comment_id;
                     Comment.findById(comment_id, function(err, selectedComment) {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).send();
+                        }
                         res.render("comment-edit", { selectedComment: selectedComment, camp: campsite });
                     });
                 }
@@ -207,6 +221,7 @@ app.post("/campgrounds/:id/comments/:comment_id", isCommentOwner, function(req, 
             Comment.findByIdAndUpdate(comment_id, object, function(err, updated) {
                 if (err) {
                     console.log(err);
+                    res.status(500).send();
                 } else {
                     req.flash("success", "Your comment has been edited");
                     res.redirect("/campgrounds/" + id);
@@ -221,6 +236,7 @@ app.post("/campgrounds/:id/comments/:comment_id/delete", isCommentOwner, functio
     Campground.findById(id, function(err, campsite) {
         if (err) {
             console.log(err);
+            res.status(500).send();
         } else {
             if (req.user)
                 var comment_id = req.params.comment_id;
@@ -294,7 +310,7 @@ function isCommentOwner(req, res, next) {
 }
 
 app.get("*", function(req, res) {
-    res.send("<h2>ERROR 404 - Page not found</h2>");
+    res.status(404).send();
 });
 
 app.listen(8080, '127.0.0.1', function() {
